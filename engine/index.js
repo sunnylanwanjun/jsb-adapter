@@ -43,9 +43,11 @@ require('jsb-adapter/engine/jsb-cocosanalytics.js');
 require('jsb-adapter/engine/jsb-assets-manager.js');
 
 if (CC_JSB) {
+    require('jsb-adapter/engine/scene/node-proxy.js');
+    require('jsb-adapter/engine/scene/render-handle.js');
+    require('jsb-adapter/engine/scene/render-flow.js');
+
     cc.game.on(cc.game.EVENT_ENGINE_INITED, function () {
-        require('jsb-adapter/engine/scene/node-proxy.js');
-        require('jsb-adapter/engine/scene/render-handle.js');
         // Assemblers
         require('jsb-adapter/engine/assemblers/sprite/index.js');
         require('jsb-adapter/engine/assemblers/sprite/simple.js');

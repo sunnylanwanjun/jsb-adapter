@@ -35,10 +35,23 @@ if (CC_RUNTIME) {
     require('jsb-adapter/engine/jsb-videoplayer.js');
     require('jsb-adapter/engine/jsb-webview.js');
 }
-require('jsb-adapter/engine/jsb-node.js');
 require('jsb-adapter/engine/jsb-audio.js');
 require('jsb-adapter/engine/jsb-loader.js');
 require('jsb-adapter/engine/jsb-editbox.js');
 require('jsb-adapter/engine/jsb-reflection.js');
 require('jsb-adapter/engine/jsb-cocosanalytics.js');
 require('jsb-adapter/engine/jsb-assets-manager.js');
+
+if (CC_JSB) {
+    cc.game.on(cc.game.EVENT_ENGINE_INITED, function () {
+        require('jsb-adapter/engine/scene/node-proxy.js');
+        require('jsb-adapter/engine/scene/render-handle.js');
+        // Assemblers
+        require('jsb-adapter/engine/assemblers/sprite/index.js');
+        require('jsb-adapter/engine/assemblers/sprite/simple.js');
+        require('jsb-adapter/engine/assemblers/sprite/sliced.js');
+        require('jsb-adapter/engine/assemblers/label/index.js');
+        require('jsb-adapter/engine/assemblers/label/ttf.js');
+        require('jsb-adapter/engine/assemblers/label/bmfont.js');
+    });
+}

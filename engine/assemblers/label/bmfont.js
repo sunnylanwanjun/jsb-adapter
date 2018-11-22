@@ -64,6 +64,11 @@ cc.Label._assembler.bmfont = cc.js.addon({
         _dataOffset = 0;
     },
 
+    _quadsUpdated (comp) {
+        comp._renderHandle.setVertsDirty();
+        _dataOffset = 0;
+    },
+
     appendQuad (comp, texture, rect, rotated, x, y, scale) {
         let renderHandle = comp._renderHandle;
         let verts = renderHandle.vDatas[0],

@@ -5,7 +5,7 @@ const POST_RENDER = 0;
 const LOCAL_TRANSFORM = 1 << 0;
 const WORLD_TRANSFORM = 1 << 0;
 const TRANSFORM = LOCAL_TRANSFORM | WORLD_TRANSFORM;
-const UPDATE_RENDER_DATA = 1;
+const UPDATE_RENDER_DATA = 1 << 1;
 const OPACITY = 1 << 2;
 const COLOR = 1 << 3;
 const CHILDREN = 1 << 4;
@@ -54,7 +54,7 @@ _proto._opacity = function (node) {
 
 _proto._updateRenderData = function (node) {
     let comp = node._renderComponent;
-    comp._renderHandle.updateRenderData();
+    comp._assembler.updateRenderData(comp);
     node._renderFlag &= ~UPDATE_RENDER_DATA;
     this._next._func(node);
 };

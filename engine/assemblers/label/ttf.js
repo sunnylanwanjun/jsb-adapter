@@ -27,33 +27,36 @@ const WHITE = cc.color(255, 255, 255, 255);
 
 cc.Label._assembler.ttf = cc.js.addon({
     createData (comp) {
-        let renderData = comp.requestRenderData();
-        renderData.vertexCount = 4;
-        renderData.indiceCount = 6;
+        let renderHandle = comp._renderHandle;
 
-        renderData.dataLength = 4;
-        let verts = renderData.vertices;
-        verts[0].u = 0;
-        verts[0].v = 1;
-        verts[1].u = 1;
-        verts[1].v = 1;
-        verts[2].u = 0;
-        verts[2].v = 0;
-        verts[3].u = 1;
-        verts[3].v = 0;
-        let indices = renderData.indices;
-        indices.length = 6;
-        indices[0] = 0;
-        indices[1] = 1;
-        indices[2] = 2;
-        indices[3] = 1;
-        indices[4] = 3;
-        indices[5] = 2;
-        return renderData;
+        if (renderHandle.meshCount === 0) {
+            let vertices = new Float32Array(20);
+            vertices[2] = 0;
+            vertices[3] = 1;
+            vertices[7] = 1;
+            vertices[8] = 1;
+            vertices[12] = 0;
+            vertices[13] = 0;
+            vertices[17] = 1;
+            vertices[18] = 0;
+            let indices = new Uint16Array(6);
+            indices[0] = 0;
+            indices[1] = 1;
+            indices[2] = 2;
+            indices[3] = 1;
+            indices[4] = 3;
+            indices[5] = 2;
+            renderHandle.updateMesh(0, vertices, indices);
+            let uintVerts = renderHandle.uintVDatas[0];
+            uintVerts[4] = uintVerts[9] = uintVerts[14] = uintVerts[19] = WHITE._val;
+        }
+
+        return renderHandle;
     },
 
     _updateVerts (comp) {
-        let renderData = comp._renderData;
+        let renderHandle = comp._renderHandle;
+        renderHandle.updateMaterial(0, comp.getMaterial());
 
         let node = comp.node,
             width = node.width,
@@ -61,18 +64,14 @@ cc.Label._assembler.ttf = cc.js.addon({
             appx = node.anchorX * width,
             appy = node.anchorY * height;
 
-        let verts = renderData.vertices;
-        verts[0].x = -appx;
-        verts[0].y = -appy;
-        verts[0].color = WHITE._val;
-        verts[1].x = width - appx;
-        verts[1].y = -appy;
-        verts[1].color = WHITE._val;
-        verts[2].x = -appx;
-        verts[2].y = height - appy;
-        verts[2].color = WHITE._val;
-        verts[3].x = width - appx;
-        verts[3].y = height - appy;
-        verts[3].color = WHITE._val;
+        let verts = renderHandle.vDatas[0];
+        verts[0] = -appx;
+        verts[1] = -appy;
+        verts[5] = width - appx;
+        verts[6] = -appy;
+        verts[10] = -appx;
+        verts[11] = height - appy;
+        verts[15] = width - appx;
+        verts[16] = height - appy;
     }
 }, cc.textUtils.ttf);

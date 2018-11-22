@@ -23,23 +23,51 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+let _dataOffset = 0;
+
 cc.Label._assembler.bmfont = cc.js.addon({
     createData (comp) {
-        var renderData = comp.requestRenderData();
-        return renderData;
+        return comp._renderHandle;
+    },
+
+    _reserveQuads (comp, count) {
+        let renderHandle = comp._renderHandle;
+
+        let vBytes = count * 4 * 5 * 4;
+        let iBytes = count * 6 * 2;
+        let bytes = vBytes + iBytes;
+        let needUpdateArray = false;
+
+        if (!renderHandle.flexBuffer) {
+            renderHandle.flexBuffer = new cc.FlexBuffer(bytes);
+            needUpdateArray = true;
+        }
+        else {
+            needUpdateArray = renderHandle.flexBuffer.reserve(bytes);
+        }
+
+        let buffer = renderHandle.flexBuffer.buffer;
+        if (needUpdateArray) {
+            let vertices = new Float32Array(buffer, 0, vBytes/4);
+            let indices = new Uint16Array(buffer, vBytes, iBytes/2);
+            for (let i = 0, vid = 0; i < indices.length; i += 6, vid += 4) {
+                indices[i] = vid;
+                indices[i+1] = vid+1;
+                indices[i+2] = vid+2;
+                indices[i+3] = vid+1;
+                indices[i+4] = vid+3;
+                indices[i+5] = vid+2;
+            }
+            renderHandle.updateMesh(0, vertices, indices);
+        }
+        renderHandle.updateMaterial(0, comp.getMaterial());
+        _dataOffset = 0;
     },
 
     appendQuad (comp, texture, rect, rotated, x, y, scale) {
-        let renderData = comp._renderData;
-        let verts = renderData.vertices,
-            indices = renderData.indices;
-        let dataOffset = renderData.dataLength;
-        let indexOffset = indices.length;
-        
-        renderData.dataLength += 4;
-        indices.length += 6;
-        renderData.vertexCount = renderData.dataLength;
-        renderData.indiceCount = renderData.dataLength / 2 * 3;
+        let renderHandle = comp._renderHandle;
+        let verts = renderHandle.vDatas[0],
+            uintVerts = renderHandle.uintVDatas[0];
 
         let texw = texture.width,
             texh = texture.height,
@@ -54,49 +82,43 @@ cc.Label._assembler.bmfont = cc.js.addon({
             b = (rect.y + rectHeight) / texh;
             t = (rect.y) / texh;
 
-            verts[dataOffset].u = l;
-            verts[dataOffset].v = b;
-            verts[dataOffset+1].u = r;
-            verts[dataOffset+1].v = b;
-            verts[dataOffset+2].u = l;
-            verts[dataOffset+2].v = t;
-            verts[dataOffset+3].u = r;
-            verts[dataOffset+3].v = t;
+            verts[_dataOffset+2] = l;
+            verts[_dataOffset+3] = b;
+            verts[_dataOffset+7] = r;
+            verts[_dataOffset+8] = b;
+            verts[_dataOffset+12] = l;
+            verts[_dataOffset+13] = t;
+            verts[_dataOffset+17] = r;
+            verts[_dataOffset+18] = t;
         } else {
             l = (rect.x) / texw;
             r = (rect.x + rectHeight) / texw;
             b = (rect.y + rectWidth) / texh;
             t = (rect.y) / texh;
 
-            verts[dataOffset].u = l;
-            verts[dataOffset].v = t;
-            verts[dataOffset+1].u = l;
-            verts[dataOffset+1].v = b;
-            verts[dataOffset+2].u = r;
-            verts[dataOffset+2].v = t;
-            verts[dataOffset+3].u = r;
-            verts[dataOffset+3].v = b;
+            verts[_dataOffset+2] = l;
+            verts[_dataOffset+3] = t;
+            verts[_dataOffset+7] = l;
+            verts[_dataOffset+8] = b;
+            verts[_dataOffset+12] = r;
+            verts[_dataOffset+13] = t;
+            verts[_dataOffset+17] = r;
+            verts[_dataOffset+18] = b;
         }
 
-        verts[dataOffset].x = x;
-        verts[dataOffset].y = y - rectHeight * scale;
-        verts[dataOffset].color = color;
-        verts[dataOffset+1].x = x + rectWidth * scale;
-        verts[dataOffset+1].y = y - rectHeight * scale;
-        verts[dataOffset+1].color = color;
-        verts[dataOffset+2].x = x;
-        verts[dataOffset+2].y = y;
-        verts[dataOffset+2].color = color;
-        verts[dataOffset+3].x = x + rectWidth * scale;
-        verts[dataOffset+3].y = y;
-        verts[dataOffset+3].color = color;
+        verts[_dataOffset] = x;
+        verts[_dataOffset+1] = y - rectHeight * scale;
+        verts[_dataOffset+5] = x + rectWidth * scale;
+        verts[_dataOffset+6] = y - rectHeight * scale;
+        verts[_dataOffset+10] = x;
+        verts[_dataOffset+11] = y;
+        verts[_dataOffset+15] = x + rectWidth * scale;
+        verts[_dataOffset+16] = y;
+        uintVerts[_dataOffset+4] = color;
+        uintVerts[_dataOffset+9] = color;
+        uintVerts[_dataOffset+14] = color;
+        uintVerts[_dataOffset+19] = color;
 
-        // fill indice data
-        indices[indexOffset++] = dataOffset;
-        indices[indexOffset++] = dataOffset+1;
-        indices[indexOffset++] = dataOffset+2;
-        indices[indexOffset++] = dataOffset+1;
-        indices[indexOffset++] = dataOffset+3;
-        indices[indexOffset++] = dataOffset+2;
+        _dataOffset += 20;
     },
 }, cc.textUtils.bmfont);

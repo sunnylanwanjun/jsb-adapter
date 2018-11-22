@@ -48,6 +48,7 @@ if (CC_JSB) {
     require('jsb-adapter/engine/scene/render-flow.js');
 
     cc.game.on(cc.game.EVENT_ENGINE_INITED, function () {
+        require('jsb-adapter/engine/assemblers/flex-buffer.js');
         // Assemblers
         require('jsb-adapter/engine/assemblers/sprite/index.js');
         require('jsb-adapter/engine/assemblers/sprite/simple.js');

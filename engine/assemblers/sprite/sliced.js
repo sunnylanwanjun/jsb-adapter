@@ -9,27 +9,28 @@ cc.Sprite._assembler.sliced = {
     useModel: false,
 
     createData (sprite) {
-        let renderData = sprite.requestRenderData();
-        let indices = renderData.indices;
-        renderData.dataLength = 16;
-        renderData.vertexCount = 16;
-        renderData.indiceCount = 54;
+        let renderHandle = sprite._renderHandle;
 
-        indices.length = 54;
-        let indexOffset = 0;
-        for (let r = 0; r < 3; ++r) {
-            for (let c = 0; c < 3; ++c) {
-                let start = r*4 + c;
-                indices[indexOffset++] = start;
-                indices[indexOffset++] = start + 1;
-                indices[indexOffset++] = start + 4;
-                indices[indexOffset++] = start + 1;
-                indices[indexOffset++] = start + 5;
-                indices[indexOffset++] = start + 4;
+        if (renderHandle.meshCount === 0) {
+            let vertices = new Float32Array(80);
+            let indices = new Uint16Array(54);
+
+            let indexOffset = 0;
+            for (let r = 0; r < 3; ++r) {
+                for (let c = 0; c < 3; ++c) {
+                    let start = r*4 + c;
+                    indices[indexOffset++] = start;
+                    indices[indexOffset++] = start + 1;
+                    indices[indexOffset++] = start + 4;
+                    indices[indexOffset++] = start + 1;
+                    indices[indexOffset++] = start + 5;
+                    indices[indexOffset++] = start + 4;
+                }
             }
+            renderHandle.updateMesh(0, vertices, indices);
         }
 
-        return renderData;
+        return renderHandle;
     },
 
     updateRenderData (sprite) {
@@ -41,18 +42,19 @@ cc.Sprite._assembler.sliced = {
             if (sprite._material._texture !== frame._texture) {
                 sprite._activateMaterial();
             }
+            sprite._renderHandle.updateMaterial(0, sprite._material);
         }
 
-        let renderData = sprite._renderData;
-        if (renderData && frame && sprite._vertsDirty) {
+        if (frame && sprite._vertsDirty) {
             this.updateVerts(sprite);
             sprite._vertsDirty = false;
         }
     },
     
     updateVerts (sprite) {
-        let renderData = sprite._renderData,
-            verts = renderData.vertices,
+        let renderHandle = sprite._renderHandle,
+            verts = renderHandle.vDatas[0],
+            uintVerts = renderHandle.uintVDatas[0],
             node = sprite.node,
             color = node._color._val,
             width = node.width, height = node.height,
@@ -86,14 +88,15 @@ cc.Sprite._assembler.sliced = {
         for (let row = 0; row < 4; ++row) {
             let rowD = temp[row];
             for (let col = 0; col < 4; ++col) {
-                let uv = uvSliced[row * 4 + col];
+                let vid = row * 4 + col;
+                let uv = uvSliced[vid];
                 let colD = temp[col];
-                let vert = verts[4 + row*4 + col];
-                vert.x = colD.x;
-                vert.y = rowD.y;
-                vert.u = uv.u;
-                vert.v = uv.v;
-                vert.color = color;
+                let voffset = vid * 5;
+                verts[voffset] = colD.x;
+                verts[voffset+1] = rowD.y;
+                verts[voffset+2] = uv.u;
+                verts[voffset+3] = uv.v;
+                uintVerts[voffset+4] = color;
             }
         }
     },

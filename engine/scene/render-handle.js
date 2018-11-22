@@ -1,4 +1,13 @@
 cc.js.mixin(renderer.RenderHandle.prototype, {
+    _ctor () {
+        this.vDatas = [];
+        this.uintVDatas = [];
+        this.iDatas = [];
+        this.effects = [];
+        this.meshCount = 0;
+        this._material = null;
+    },
+
     bind (component) {
         if (this._comp !== component && component instanceof cc.RenderComponent) {
             this._comp = component;
@@ -8,46 +17,42 @@ cc.js.mixin(renderer.RenderHandle.prototype, {
             if (component._vertexFormat) {
                 this.setVertexFormat(component._vertexFormat._nativeObj);
             }
-            if (!this._meshes) {
-                this._meshes = [];
-            }
-            else {
-                this._meshes.length = 0;
-            }
         }
     },
 
-    _updateRenderData () {
-        let comp = this._comp;
-        if (comp) {
-            comp._assembler.updateRenderData(comp);
-            // node._renderFlag &= ~cc.RenderFlow.FLAG_UPDATE_RENDER_DATA;
-            let datas = comp.__allocedDatas;
-            for (let i = 0; i < datas.length; i++) {
-                let data = datas[i];
-                if (!data.material) {
-                    continue;
-                }
-                let mesh = this._meshes[i];
-                if (!mesh) {
-                    mesh = new renderer.Mesh(data.vertices, data.indices);
-                    this._meshes[i] = mesh;
-                }
-                else {
-                    mesh.updateVertices(data.vertices);
-                    mesh.updateIndices(data.indices);
-                }
-                let effect = data.material.effect._nativeObj;
-                this.addMesh(mesh, effect);
-            }
+    reserveMeshCount (count) {
+        if (this.meshCount < count) {
+            this.vDatas.length = count;
+            this.uintVDatas.length = count;
+            this.iDatas.length = count;
+            this.effects.length = count;
+            this.setMeshCount(count);
         }
     },
+    
+    updateMesh (index, vertices, indices) {
+        this.reserveMeshCount(index+1);
 
-    _updateColor () {
-        let comp = this._comp;
-        if (comp) {
-            comp._updateColor();
-            // node._renderFlag &= ~cc.RenderFlow.FLAG_COLOR;
+        this.vDatas[index] = vertices;
+        this.uintVDatas[index] = new Uint32Array(vertices.buffer);
+        this.iDatas[index] = indices;
+        this.meshCount = this.vDatas.length;
+
+        this.updateNativeMesh(index, vertices, indices);
+    },
+
+    updateMaterial (index, material) {
+        this.reserveMeshCount(index + 1);
+        let oldEffect = this.effects[index];
+        let newEffect;
+
+        if (material) {
+            newEffect = this.effects[index] = material.effect;
+        } else {
+            newEffect = this.effects[index] = null;
+        }
+        if (newEffect !== oldEffect) {
+            this.updateNativeEffect(index, newEffect ? newEffect._nativeObj : null);
         }
     },
 

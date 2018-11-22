@@ -3,21 +3,22 @@ cc.Sprite._assembler.simple = {
     useModel: false,
 
     createData (sprite) {
-        let renderData = sprite.requestRenderData();
-        let indices = renderData.indices;
-        renderData.dataLength = 4;
-        renderData.vertexCount = 4;
-        renderData.indiceCount = 6;
+        let renderHandle = sprite._renderHandle;
 
-        indices.length = 6;
-        indices[0] = 0;
-        indices[1] = 1;
-        indices[2] = 2;
-        indices[3] = 1;
-        indices[4] = 3;
-        indices[5] = 2;
+        if (renderHandle.meshCount === 0) {
+            let vertices = new Float32Array(20);
+            let indices = new Uint16Array(6);
+            indices[0] = 0;
+            indices[1] = 1;
+            indices[2] = 2;
+            indices[3] = 1;
+            indices[4] = 3;
+            indices[5] = 2;
+            renderHandle.updateMesh(0, vertices, indices);
+        }
 
-        return renderData;
+        // No render data needed for native
+        return renderHandle;
     },
     
     updateRenderData (sprite) {
@@ -29,21 +30,22 @@ cc.Sprite._assembler.simple = {
             if (sprite._material._texture !== frame._texture) {
                 sprite._activateMaterial();
             }
+            sprite._renderHandle.updateMaterial(0, sprite._material);
         }
 
-        let renderData = sprite._renderData;
-        if (renderData && frame && sprite._vertsDirty) {
+        if (frame && sprite._vertsDirty) {
             this.updateVerts(sprite);
             sprite._vertsDirty = false;
         }
     },
 
     updateVerts (sprite) {
-        let renderData = sprite._renderData,
+        let renderHandle = sprite._renderHandle,
             node = sprite.node,
             frame = sprite.spriteFrame,
             color = node._color._val,
-            verts = renderData.vertices,
+            verts = renderHandle.vDatas[0],
+            uintVerts = renderHandle.uintVDatas[0],
             cw = node.width, ch = node.height,
             appx = node.anchorX * cw, appy = node.anchorY * ch,
             l, b, r, t;
@@ -71,25 +73,25 @@ cc.Sprite._assembler.simple = {
         // get uv from sprite frame directly
         let uv = frame.uv;
         
-        verts[0].x = l;
-        verts[0].y = b;
-        verts[0].u = uv[0];
-        verts[0].v = uv[1];
-        verts[0].color = color;
-        verts[1].x = r;
-        verts[1].y = b;
-        verts[1].u = uv[2];
-        verts[1].v = uv[3];
-        verts[1].color = color;
-        verts[2].x = l;
-        verts[2].y = t;
-        verts[2].u = uv[4];
-        verts[2].v = uv[5];
-        verts[2].color = color;
-        verts[3].x = r;
-        verts[3].y = t;
-        verts[3].u = uv[6];
-        verts[3].v = uv[7];
-        verts[3].color = color;
+        verts[0] = l;
+        verts[1] = b;
+        verts[2] = uv[0];
+        verts[3] = uv[1];
+        verts[5] = r;
+        verts[6] = b;
+        verts[7] = uv[2];
+        verts[8] = uv[3];
+        verts[10] = l;
+        verts[11] = t;
+        verts[12] = uv[4];
+        verts[13] = uv[5];
+        verts[15] = r;
+        verts[16] = t;
+        verts[17] = uv[6];
+        verts[18] = uv[7];
+        uintVerts[4] = color;
+        uintVerts[9] = color;
+        uintVerts[14] = color;
+        uintVerts[19] = color;
     }
 };

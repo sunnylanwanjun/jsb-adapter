@@ -5,12 +5,12 @@ const POST_RENDER = 0;
 const LOCAL_TRANSFORM = 1 << 0;
 const WORLD_TRANSFORM = 1 << 0;
 const TRANSFORM = LOCAL_TRANSFORM | WORLD_TRANSFORM;
-const UPDATE_RENDER_DATA = 0;
-const OPACITY = 1 << 1;
-const COLOR = 1 << 2;
-const CHILDREN = 1 << 3;
-const POST_UPDATE_RENDER_DATA = 0;
-const FINAL = 1 << 4;
+const UPDATE_RENDER_DATA = 1;
+const OPACITY = 1 << 2;
+const COLOR = 1 << 3;
+const CHILDREN = 1 << 4;
+const POST_UPDATE_RENDER_DATA = 5;
+const FINAL = 1 << 6;
 
 let _cullingMask = 0;
 let _parentOpacity = 1;
@@ -54,7 +54,7 @@ _proto._opacity = function (node) {
 
 _proto._updateRenderData = function (node) {
     let comp = node._renderComponent;
-    comp._assembler.updateRenderData(comp);
+    comp._renderHandle.updateRenderData();
     node._renderFlag &= ~UPDATE_RENDER_DATA;
     this._next._func(node);
 };
@@ -86,7 +86,7 @@ _proto._children = function (node) {
 
 _proto._postUpdateRenderData = function (node) {
     let comp = node._renderComponent;
-    comp._postAssembler && comp._postAssembler.updateRenderData(comp);
+    // comp._postAssembler && comp._postAssembler.updateRenderData(comp);
     node._renderFlag &= ~POST_UPDATE_RENDER_DATA;
     this._next._func(node);
 };
@@ -114,15 +114,15 @@ function createFlow (flag, next) {
         case OPACITY:
             flow._func = flow._opacity;
             break;
-            // case UPDATE_RENDER_DATA:
-            //     flow._func = flow._updateRenderData;
-            //     break;
+        case UPDATE_RENDER_DATA:
+            flow._func = flow._updateRenderData;
+            break;
         case CHILDREN:
             flow._func = flow._children;
             break;
-            // case POST_UPDATE_RENDER_DATA:
-            //     flow._func = flow._postUpdateRenderData;
-            //     break;
+        case POST_UPDATE_RENDER_DATA:
+            flow._func = flow._postUpdateRenderData;
+            break;
     }
     
     return flow;

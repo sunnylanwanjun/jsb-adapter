@@ -26,7 +26,7 @@ _proto._doNothing = function () {
 };
 
 _proto._localTransform = function (node) {
-    node._proxy.updateLocalMatrix();
+    node._proxy.updateLocalTRS();
     node._renderFlag &= ~LOCAL_TRANSFORM;
     this._next._func(node);
 };

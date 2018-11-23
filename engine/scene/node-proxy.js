@@ -15,7 +15,7 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
             owner._proxy = this;
             this.updateZOrder();
             this.updateGroupIndex();
-            this.updateLocalMatrix();
+            this.updateLocalTRS();
             if (owner._parent && owner._parent._proxy) {
                 this.updateParent(owner._parent._proxy);
             }
@@ -51,7 +51,7 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
         this.setGroupID(this._owner.groupIndex);
     },
 
-    updateLocalMatrix () {
+    updateLocalTRS () {
         let trs = this._trs;
         let pos = this._owner._position;
         let rotation = this._owner._quat;

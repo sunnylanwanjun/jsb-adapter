@@ -1,7 +1,7 @@
 cc.js.mixin(renderer.NodeProxy.prototype, {
     _ctor () {
         this._owner = null;
-        this.generateJSMatrix();
+        this.generateTypedArray();
     },
 
     bind (owner) {
@@ -52,26 +52,20 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
     },
 
     updateLocalMatrix () {
-        let ab = this._matrix;
-        if (ab && this._owner) {
-            let m = this._owner._matrix;
-            ab[0]  = m.m00;
-            ab[1]  = m.m01;
-            ab[2]  = m.m02;
-            ab[3]  = m.m03;
-            ab[4]  = m.m04;
-            ab[5]  = m.m05;
-            ab[6]  = m.m06;
-            ab[7]  = m.m07;
-            ab[8]  = m.m08;
-            ab[9]  = m.m09;
-            ab[10] = m.m10;
-            ab[11] = m.m11;
-            ab[12] = m.m12;
-            ab[13] = m.m13;
-            ab[14] = m.m14;
-            ab[15] = m.m15;
-        }
-        this.setMatrixDirty();
+        let trs = this._trs;
+        let pos = this._owner._position;
+        let rotation = this._owner._quat;
+        let scale = this._owner._scale;
+
+        trs[0] = 1;
+        trs[1] = pos.x;
+        trs[2] = pos.y;
+        trs[3] = pos.z;
+        trs[4] = rotation.x;
+        trs[5] = rotation.y;
+        trs[6] = rotation.z;
+        trs[7] = scale.x;
+        trs[8] = scale.y;
+        trs[9] = scale.z;
     }
 });

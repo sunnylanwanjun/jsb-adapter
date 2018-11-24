@@ -76,13 +76,13 @@ function visitNode (node) {
     _parentOpacityDirty = parentOpacityDirty;
 }
 
-RenderFlow.visit = function (scene) {
+RenderFlow.render = function (scene) {
     _parentOpacity = 1;
     _parentOpacityDirty = 0;
     
     visitNode(scene);
     
-    _nativeFlow.visit(scene._proxy);
+    _nativeFlow.render(scene._proxy);
 };
 
 RenderFlow.init = function (nativeFlow) {

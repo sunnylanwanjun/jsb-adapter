@@ -26,6 +26,8 @@
 const WHITE = cc.color(255, 255, 255, 255);
 
 cc.Label._assembler.ttf = cc.js.addon({
+    delayUpdateRenderData: true,
+    
     createData (comp) {
         let renderHandle = comp._renderHandle;
 

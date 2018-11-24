@@ -2,6 +2,7 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
     _ctor () {
         this._owner = null;
         this.generateTypedArray();
+        this._uint8Data = new Uint8Array(this._trs.buffer);
     },
 
     bind (owner) {
@@ -57,7 +58,7 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
         let rotation = this._owner._quat;
         let scale = this._owner._scale;
 
-        trs[0] = 1;
+        this._uint8Data[0] = 1;
         trs[1] = pos.x;
         trs[2] = pos.y;
         trs[3] = pos.z;

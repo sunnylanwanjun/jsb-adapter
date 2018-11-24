@@ -26,6 +26,8 @@
 let _dataOffset = 0;
 
 cc.Label._assembler.bmfont = cc.js.addon({
+    delayUpdateRenderData: true,
+
     createData (comp) {
         return comp._renderHandle;
     },

@@ -43,10 +43,11 @@ require('jsb-adapter/engine/jsb-cocosanalytics.js');
 require('jsb-adapter/engine/jsb-assets-manager.js');
 
 if (CC_JSB && CC_NATIVERENDERER) {
-    require('jsb-adapter/engine/scene/node.js');
     require('jsb-adapter/engine/scene/node-proxy.js');
-    require('jsb-adapter/engine/scene/render-handle.js');
     require('jsb-adapter/engine/scene/render-flow.js');
+    // must be required after render flow
+    require('jsb-adapter/engine/scene/node.js');
+    require('jsb-adapter/engine/scene/render-handle.js');
 
     cc.game.on(cc.game.EVENT_ENGINE_INITED, function () {
         require('jsb-adapter/engine/assemblers/flex-buffer.js');

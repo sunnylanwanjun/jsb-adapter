@@ -1,3 +1,6 @@
+const RenderFlow = cc.RenderFlow;
+const BEFORE_RENDER = RenderFlow.EventType.BEFORE_RENDER;
+
 cc.js.mixin(renderer.RenderHandle.prototype, {
     _ctor () {
         this.vDatas = [];
@@ -6,6 +9,7 @@ cc.js.mixin(renderer.RenderHandle.prototype, {
         this.effects = [];
         this.meshCount = 0;
         this._material = null;
+        this._delayed = false;
     },
 
     bind (component) {
@@ -71,5 +75,17 @@ cc.js.mixin(renderer.RenderHandle.prototype, {
                 node._proxy.removeHandle("render");
             }
         }
-    }
+    },
+
+    delayUpdateRenderData () {
+        if (this._comp) {
+            RenderFlow.on(BEFORE_RENDER, this.updateRenderData, this);
+            this._delayed = true;
+        }
+    },
+
+    updateRenderData () {
+        this._comp._assembler.updateRenderData(this._comp);
+        this._delayed = false;
+    },
 });

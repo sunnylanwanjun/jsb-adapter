@@ -49,6 +49,9 @@ if (CC_JSB && CC_NATIVERENDERER) {
     require('jsb-adapter/engine/scene/node.js');
     require('jsb-adapter/engine/scene/render-handle.js');
 
+    require('jsb-adapter/engine/scene/custom-render-handle.js');
+    require('jsb-adapter/engine/jsb-skeleton.js');
+
     cc.game.on(cc.game.EVENT_ENGINE_INITED, function () {
         require('jsb-adapter/engine/assemblers/flex-buffer.js');
         // Assemblers

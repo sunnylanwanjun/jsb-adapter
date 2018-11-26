@@ -110,4 +110,8 @@ export default class Effect {
 
     return out;
   }
+
+  updateHash (hash) {
+    this._nativeObj.updateHash(hash);
+  }
 }

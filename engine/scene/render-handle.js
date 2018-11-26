@@ -110,7 +110,9 @@ cc.js.mixin(renderer.RenderHandle.prototype, {
     },
 
     updateRenderData () {
-        this._comp._assembler.updateRenderData(this._comp);
-        this._delayed = false;
+        if (this._comp && this._comp._assembler) {
+            this._comp._assembler.updateRenderData(this._comp);
+            this._delayed = false;
+        }
     },
 });

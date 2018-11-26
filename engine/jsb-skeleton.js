@@ -179,6 +179,7 @@
         var materials = this._materials;
     
         var baseKey = baseMaterial._hash;
+        var material = undefined;
         if (!materials[baseKey]) {
             material = baseMaterial;
         } else {

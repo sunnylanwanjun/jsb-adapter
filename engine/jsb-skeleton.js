@@ -191,10 +191,6 @@
         material.useColor = false;
         material.updateHash();
 
-        var pass = material._mainTech.passes[0];
-        pass._programName = 'skeleton';
-        pass._native.setProgramName('skeleton');
-
         materials[material._hash] = material;
         return material;
     }

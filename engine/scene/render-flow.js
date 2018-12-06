@@ -42,15 +42,17 @@ const INV_OPACITY = ~OPACITY;
 const INV_COLOR = ~COLOR;
 
 let _nativeFlow = null;
-
 let RenderFlow = cc.RenderFlow;
 RenderFlow.EventType = {
     BEFORE_RENDER: 'before-render'
 };
 cc.js.mixin(RenderFlow, cc.EventTarget.prototype);
 
+var middlewareMgr = middleware.MiddlewareManager.getInstance();
+var director = cc.director;
 RenderFlow.render = function (scene) {
     this.emit(this.EventType.BEFORE_RENDER);
+    middlewareMgr && middlewareMgr.update(director._deltaTime);
     _nativeFlow.render(scene._proxy);
 };
 

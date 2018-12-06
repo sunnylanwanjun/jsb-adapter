@@ -90,8 +90,9 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
         trs[4] = rotation.x;
         trs[5] = rotation.y;
         trs[6] = rotation.z;
-        trs[7] = scale.x;
-        trs[8] = scale.y;
-        trs[9] = scale.z;
+        trs[7] = rotation.w;
+        trs[8] = scale.x;
+        trs[9] = scale.y;
+        trs[10] = scale.z;
     }
 });

@@ -67,17 +67,14 @@ OPACITY = RenderFlow.FLAG_OPACITY;
 UPDATE_RENDER_DATA = RenderFlow.FLAG_UPDATE_RENDER_DATA;
 
 cc.js.getset(cc.Node.prototype, "_renderFlag", function () {
-    return this.__renderFlag;
+    return 0;
 }, function (flag) {
     if (flag === 0) return;
-
-    this.__renderFlag = flag;
 
     let comp = this._renderComponent;
     let assembler = comp && comp._assembler;
 
     if ((flag & UPDATE_RENDER_DATA) && assembler) {
-        this.__renderFlag &= ~UPDATE_RENDER_DATA;
         if (assembler.delayUpdateRenderData) {
             comp._renderHandle.delayUpdateRenderData();
         }
@@ -86,7 +83,6 @@ cc.js.getset(cc.Node.prototype, "_renderFlag", function () {
         }
     }
     if (flag & COLOR) {
-        this.__renderFlag &= ~COLOR;
         // this._proxy && this._proxy.updateColor();
         comp && comp._updateColor();
     }

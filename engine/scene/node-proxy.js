@@ -26,8 +26,6 @@
 cc.js.mixin(renderer.NodeProxy.prototype, {
     _ctor () {
         this._owner = null;
-        this.generateTypedArray();
-        this._uint8Data = new Uint8Array(this._trs.buffer);
     },
 
     bind (owner) {
@@ -41,7 +39,7 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
             owner._proxy = this;
             this.updateZOrder();
             this.updateGroupIndex();
-            this.updateLocalTRS();
+            this.updateJSOwner(owner);
             if (owner._parent && owner._parent._proxy) {
                 this.updateParent(owner._parent._proxy);
             }
@@ -76,23 +74,4 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
     updateGroupIndex () {
         this.setGroupID(this._owner.groupIndex);
     },
-
-    updateLocalTRS () {
-        let trs = this._trs;
-        let pos = this._owner._position;
-        let rotation = this._owner._quat;
-        let scale = this._owner._scale;
-
-        this._uint8Data[0] = 1;
-        trs[1] = pos.x;
-        trs[2] = pos.y;
-        trs[3] = pos.z;
-        trs[4] = rotation.x;
-        trs[5] = rotation.y;
-        trs[6] = rotation.z;
-        trs[7] = rotation.w;
-        trs[8] = scale.x;
-        trs[9] = scale.y;
-        trs[10] = scale.z;
-    }
 });

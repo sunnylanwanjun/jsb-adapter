@@ -24,7 +24,8 @@
  ****************************************************************************/
 (function(){
     if (window.dragonBones === undefined || window.middleware === undefined) return;
-
+    if (dragonBones.DragonBonesAtlasAsset === undefined) return;
+    
     var renderEngine = cc.renderer.renderEngine;
     var SpriteMaterial = renderEngine.SpriteMaterial;
 

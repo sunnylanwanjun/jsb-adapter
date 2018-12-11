@@ -27,7 +27,8 @@
 
 (function(){
     if (window.jsbSpine === undefined || window.jsbEditor === undefined) return;
-
+    if (window.sp === undefined || window.spine === undefined || window.middleware === undefined) return;
+    
     var RenderFlow = cc.RenderFlow;
 
     sp.ANIMATION_EVENT_TYPE = {

@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
- (function(){
+(function(){
     if (window.middleware === undefined) return;
     var ParticleSystem = cc.ParticleSystem;
     if (ParticleSystem === undefined) return;
@@ -34,9 +34,7 @@
 
     PSProto.initProperties = function () {
 
-        if (!this._simulator) {
-            this._simulator = new middleware.ParticleSimulator()
-        }
+        this._simulator = new middleware.ParticleSimulator()
         
         this._previewTimer = null;
         this._focused = false;
@@ -62,12 +60,11 @@
             return this._gravity;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._gravity && (this._gravity = cc.v2(0, 0));
 
             this.gravity.x = val.x;
             this.gravity.y = val.y;
-            this._simulator.setGravity(val.x, val.y, 0);
+            this._simulator && this._simulator.setGravity(val.x, val.y, 0);
         }
     });
 
@@ -77,12 +74,11 @@
             return this._sourcePos;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._sourcePos && (this._sourcePos = cc.v2(0, 0));
 
             this._sourcePos.x = val.x;
             this._sourcePos.y = val.y;
-            this._simulator.setSourcePos(val.x, val.y, 0);
+            this._simulator && this._simulator.setSourcePos(val.x, val.y, 0);
         }
     });
 
@@ -92,12 +88,11 @@
             return this._posVar;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._posVar && (this._posVar = cc.v2(0, 0));
             
             this._posVar.x = val.x;
             this._posVar.y = val.y;
-            this._simulator.setPosVar(val.x, val.y, 0);
+            this._simulator && this._simulator.setPosVar(val.x, val.y, 0);
         }
     });
 
@@ -107,14 +102,13 @@
             return this._startColor;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._startColor && (this._startColor = cc.color(255, 255, 255, 255));
 
             this._startColor.r = val.r;
             this._startColor.g = val.g;
             this._startColor.b = val.b;
             this._startColor.a = val.a;
-            this._simulator.setStartColor(val.r, val.g, val.b, val.a);
+            this._simulator && this._simulator.setStartColor(val.r, val.g, val.b, val.a);
         }
     });
 
@@ -124,14 +118,13 @@
             return this._startColorVar;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._startColorVar && (this._startColorVar = cc.color(0, 0, 0, 0));
 
             this._startColorVar.r = val.r;
             this._startColorVar.g = val.g;
             this._startColorVar.b = val.b;
             this._startColorVar.a = val.a;
-            this._simulator.setStartColorVar(val.r, val.g, val.b, val.a);
+            this._simulator && this._simulator.setStartColorVar(val.r, val.g, val.b, val.a);
         }
     });
 
@@ -141,14 +134,13 @@
             return this._endColor;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._endColor && (this._endColor = cc.color(255, 255, 255, 0));
 
             this._endColor.r = val.r;
             this._endColor.g = val.g;
             this._endColor.b = val.b;
             this._endColor.a = val.a;
-            this._simulator.setEndColor(val.r, val.g, val.b, val.a);
+            this._simulator && this._simulator.setEndColor(val.r, val.g, val.b, val.a);
         }
     });
 
@@ -158,14 +150,13 @@
             return this._endColorVar;
         },
         set (val) {
-            !this._simulator && (this._simulator = new middleware.ParticleSimulator());
             !this._endColorVar && (this._endColorVar = cc.color(0, 0, 0, 0));
 
             this._endColorVar.r = val.r;
             this._endColorVar.g = val.g;
             this._endColorVar.b = val.b;
             this._endColorVar.a = val.a;
-            this._simulator.setEndColorVar(val.r, val.g, val.b, val.a);
+            this._simulator && this._simulator.setEndColorVar(val.r, val.g, val.b, val.a);
         }
     });
 
@@ -187,15 +178,12 @@
         }
     });
     
-    var _onLoad = PSProto.onLoad;
     PSProto.onLoad = function () {
-        _onLoad.call(this);
         this._simulator.bindNodeProxy(this.node._proxy);
     }
 
     // shield in native
-    PSProto.update = function () {
-    }
+    PSProto.update = undefined;
 
     PSProto.initNativeHandle = function () {
         this._assembler = undefined;
@@ -230,14 +218,6 @@
             this._material.texture = this._texture;
             this._updateMaterial(this._material);
         }
-    }
-
-    var _onEnable = PSProto.onEnable;
-    PSProto.onEnable = function () {
-        _onEnable.call(this);
-        this.node._renderFlag &= ~RenderFlow.FLAG_UPDATE_RENDER_DATA;
-        this.node._renderFlag &= ~RenderFlow.FLAG_RENDER;
-        this.node._renderFlag &= ~RenderFlow.FLAG_CUSTOM_IA_RENDER;
     }
 
     var _applyFile = PSProto._applyFile;
@@ -294,8 +274,7 @@
             },
             set (val) {
                 this[varName] = val;
-                !this._simulator && (this._simulator = new middleware.ParticleSimulator());
-                this._simulator[getSetName] = val;
+                this._simulator && (this._simulator[getSetName] = val);
             }
         });
     });

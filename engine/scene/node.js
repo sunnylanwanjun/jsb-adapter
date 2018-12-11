@@ -24,42 +24,6 @@
  ****************************************************************************/
 'use strict';
 
-const math = cc.vmath;
-
-let _typedArray_temp = new Float32Array(16);
-let _mat4_temp = math.mat4.create();
-
-function _mat4ToArray(typedArray, mat4) {
-    typedArray[0] = mat4.m00;
-    typedArray[1] = mat4.m01;
-    typedArray[2] = mat4.m02;
-    typedArray[3] = mat4.m03;
-    typedArray[4] = mat4.m04;
-    typedArray[5] = mat4.m05;
-    typedArray[6] = mat4.m06;
-    typedArray[7] = mat4.m07;
-    typedArray[8] = mat4.m08;
-    typedArray[9] = mat4.m09;
-    typedArray[10] = mat4.m10;
-    typedArray[11] = mat4.m11;
-    typedArray[12] = mat4.m12;
-    typedArray[13] = mat4.m13;
-    typedArray[14] = mat4.m14;
-    typedArray[15] = mat4.m15;
-}
-
-cc.Node.prototype.getWorldRTInAB = function () {
-    this.getWorldRT(_mat4_temp);
-    _mat4ToArray(_typedArray_temp, _mat4_temp);
-    return _typedArray_temp;
-};
-
-cc.Node.prototype.getWorldMatrixInAB = function () {
-    this._updateWorldMatrix();
-    _mat4ToArray(_typedArray_temp, this._worldMatrix);
-    return _typedArray_temp;
-};
-
 let RenderFlow = cc.RenderFlow;
 LOCAL_TRANSFORM = RenderFlow.FLAG_LOCAL_TRANSFORM;
 COLOR = RenderFlow.FLAG_COLOR;

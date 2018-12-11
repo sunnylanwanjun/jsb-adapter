@@ -98,7 +98,6 @@
             this._posVar.x = val.x;
             this._posVar.y = val.y;
             this._simulator.setPosVar(val.x, val.y, 0);
-            console.log(">>>>> pos var",val.x, val.y);
         }
     });
 

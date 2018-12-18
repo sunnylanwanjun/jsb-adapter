@@ -26,7 +26,6 @@
 "use strict";
 
 (function(){
-    if (window.jsbSpine === undefined || window.jsbEditor === undefined) return;
     if (window.sp === undefined || window.spine === undefined || window.middleware === undefined) return;
     
     var RenderFlow = cc.RenderFlow;
@@ -40,7 +39,7 @@
         EVENT: 5
     };
 
-    var animation = jsbSpine.SpineAnimation.prototype;
+    var animation = spine.SpineAnimation.prototype;
     // The methods are added to be compatibility with old versions.
     animation.setCompleteListener = function (listener) {
         this._compeleteListener = listener;
@@ -168,7 +167,7 @@
 
     skeleton.initNativeHandle = function () {
         this._assembler = undefined;
-        this._renderHandle = new jsbEditor.EditorRenderHandle();
+        this._renderHandle = new middleware.MiddlewareRenderHandle();
         this._renderHandle.bind(this);
     },
 
@@ -219,7 +218,7 @@
 
         var textures = {};
         for (var i = 0; i < texValues.length; ++i) {
-            var spTex = new jsbEditor.Texture2D();
+            var spTex = new middleware.Texture2D();
             var ccTex = texValues[i];
             spTex.setRealTextureIndex(i);
             spTex.setPixelsWide(ccTex.width);
@@ -236,9 +235,9 @@
             textures[texKeys[i]] = spTex;
         }
 
-        var skeletonAni = new jsbSpine.SpineAnimation();
+        var skeletonAni = new spine.SpineAnimation();
         try {
-            jsbSpine._initSkeletonRenderer(skeletonAni, jsonFile, atlasText, textures, skeletonData.scale);
+            spine._initSkeletonRenderer(skeletonAni, jsonFile, atlasText, textures, skeletonData.scale);
         } catch (e) {
             cc._throw(e);
             return;

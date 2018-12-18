@@ -40,19 +40,22 @@ cc.js.mixin(renderer.CustomRenderHandle.prototype, {
     },
     updateEnabled (enabled) {
         if (enabled) {
-            this.enable();
-            var node = this._comp.node;
-    
-            if (node) {
-                node._proxy.addHandle("render", this);
-            }
-        } else {
-            this.disable();
-            var _node = this._comp.node;
-    
-            if (_node) {
-                _node._proxy.removeHandle("render");
+            if (!this._enabled) {
+                this._enabled = true;
+                let node = this._comp.node;
+                if (node) {
+                    node._proxy.addHandle(this);
+                }
             }
         }
-    }
+        else {
+            if (this._enabled) {
+                this._enabled = false;
+                let node = this._comp.node;
+                if (node) {
+                    node._proxy.removeHandle(this);
+                }
+            }
+        }
+    },
 });

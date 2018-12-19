@@ -24,20 +24,6 @@
  ****************************************************************************/
 'use strict';
 
-const math = cc.vmath;
-let _mat4_temp = math.mat4.create();
-
-cc.Node.prototype.getWorldRTInAB = function () {
-    this.getWorldRT(_mat4_temp);
-    _mat4ToArray(_typedArray_temp, _mat4_temp);
-    return _mat4_temp.m;
-};
-
-cc.Node.prototype.getWorldMatrixInAB = function () {
-    this._updateWorldMatrix();
-    return this._worldMatrix.m;
-};
-
 let RenderFlow = cc.RenderFlow;
 LOCAL_TRANSFORM = RenderFlow.FLAG_LOCAL_TRANSFORM;
 COLOR = RenderFlow.FLAG_COLOR;

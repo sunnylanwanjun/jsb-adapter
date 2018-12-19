@@ -1,0 +1,113 @@
+/****************************************************************************
+ Copyright (c) 2018 Xiamen Yaji Software Co., Ltd.
+
+ http://www.cocos.com
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated engine source code (the "Software"), a limited,
+  worldwide, royalty-free, non-assignable, revocable and non-exclusive license
+ to use Cocos Creator solely to develop games on your target platforms. You shall
+  not use Cocos Creator software for developing other software or tools that's
+  used for developing games. You are not granted to publish, distribute,
+  sublicense, and/or sell copies of Cocos Creator.
+
+ The software or tools in this License Agreement are licensed, not sold.
+ Xiamen Yaji Software Co., Ltd. reserves all rights not expressly granted to you.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
+"use strict";
+
+cc.js.mixin(renderer.GraphicsRenderHandle.prototype, {
+    _ctor () {
+        this.vDatas = [];
+        this.uintVDatas = [];
+        this.iDatas = [];
+        this.effects = [];
+        this.meshCount = 0;
+        this._material = null;
+        this._delayed = false;
+    },
+    bind (component) {
+        if (this._comp !== component && component instanceof cc.RenderComponent) {
+            this._comp = component;
+    
+            if (component._assembler) {
+                this.setUseModel(!!component._assembler.useModel);
+            }
+        }
+    },
+    updateEnabled (enabled) {
+        let node = this._comp.node;
+        if (enabled) {
+            this.enable();
+    
+            if (node) {
+                node._proxy.addHandle("render", this);
+            }
+        } else {
+            this.disable();
+    
+            if (node) {
+                node._proxy.removeHandle("render");
+            }
+        }
+    },
+    reserveMeshCount (count) {
+        if (this.meshCount < count) {
+            this.vDatas.length = count;
+            this.uintVDatas.length = count;
+            this.iDatas.length = count;
+            this.effects.length = count;
+            this.setMeshCount(count);
+        }
+    },
+    updateMesh (index, vertices, indices) {
+        this.reserveMeshCount(index+1);
+
+        this.vDatas[index] = vertices;
+        this.uintVDatas[index] = new Uint32Array(vertices.buffer);
+        this.iDatas[index] = indices;
+        this.meshCount = this.vDatas.length;
+
+        this.updateNativeMesh(index, vertices, indices);
+    },
+    updateMaterial (index, material) {
+        this.reserveMeshCount(index + 1);
+        let oldEffect = this.effects[index];
+        let newEffect;
+
+        if (material) {
+            newEffect = this.effects[index] = material.effect;
+        } else {
+            newEffect = this.effects[index] = null;
+        }
+        if (newEffect !== oldEffect) {
+            this.updateNativeEffect(index, newEffect ? newEffect._nativeObj : null);
+        }
+    },
+    updateRenderData () {
+        if (this._comp && this._comp._assembler) {
+            this._comp._assembler.updateRenderData(this._comp);
+            this._delayed = false;
+        }
+    },
+    updateIAData (index, start, count) {
+        this.updateIA(index, start, count);
+    },
+    clear () {
+        this.vDatas = [];
+        this.uintVDatas = [];
+        this.iDatas = [];
+        this.effects = [];
+        this.meshCount = 0;
+        this.reset();
+    }
+});

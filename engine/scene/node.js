@@ -29,6 +29,7 @@ LOCAL_TRANSFORM = RenderFlow.FLAG_LOCAL_TRANSFORM;
 COLOR = RenderFlow.FLAG_COLOR;
 OPACITY = RenderFlow.FLAG_OPACITY;
 UPDATE_RENDER_DATA = RenderFlow.FLAG_UPDATE_RENDER_DATA;
+CUSTOM_IA_RENDER = RenderFlow.FLAG_CUSTOM_IA_RENDER;
 
 cc.js.getset(cc.Node.prototype, "_renderFlag", function () {
     return 0;
@@ -38,7 +39,7 @@ cc.js.getset(cc.Node.prototype, "_renderFlag", function () {
     let comp = this._renderComponent;
     let assembler = comp && comp._assembler;
 
-    if ((flag & UPDATE_RENDER_DATA) && assembler) {
+    if (((flag & UPDATE_RENDER_DATA) || (flag & CUSTOM_IA_RENDER)) && assembler) {
         if (assembler.delayUpdateRenderData) {
             comp._renderHandle.delayUpdateRenderData();
         }

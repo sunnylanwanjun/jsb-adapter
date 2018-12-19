@@ -45,19 +45,18 @@ cc.js.mixin(renderer.GraphicsRenderHandle.prototype, {
         }
     },
     updateEnabled (enabled) {
+        let node = this._comp.node;
         if (enabled) {
             this.enable();
-            var node = this._comp.node;
     
             if (node) {
                 node._proxy.addHandle("render", this);
             }
         } else {
             this.disable();
-            var _node = this._comp.node;
     
-            if (_node) {
-                _node._proxy.removeHandle("render");
+            if (node) {
+                node._proxy.removeHandle("render");
             }
         }
     },

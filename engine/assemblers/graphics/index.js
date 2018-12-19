@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-const PointFlags = cc.Graphics.types.PointFlags;
+const PointFlags = cc.Graphics.Types.PointFlags;
 const LineJoin = cc.Graphics.LineJoin;
 const LineCap = cc.Graphics.LineCap;
 const Earcut = cc.Graphics.earcut;
@@ -254,6 +254,7 @@ cc.Graphics._assembler = {
     },
     
     _expandFill (graphics) {
+
         _impl = graphics._impl;
 
         let paths = _impl._paths;

@@ -1,7 +1,7 @@
 
-const Helper = cc.Graphics.helper;
-const PointFlags = cc.Graphics.types.PointFlags;
-const Point = cc.GraphicsPoint;
+const Helper = cc.Graphics.Helper;
+const PointFlags = cc.Graphics.Types.PointFlags;
+const Point = cc.Graphics.Point;
 
 function Path () {
     this.reset();
@@ -24,6 +24,7 @@ cc.js.mixin(Path.prototype, {
 
 let RenderData = function RenderData () {
     this.index = 0;
+    this.byteOffset = 0;
     this.indiceStart = 0;
     this.indiceOffset = 0;
     this.vertexStart = 0;
@@ -187,16 +188,18 @@ cc.js.mixin(cc.Graphics.Impl.prototype, {
 
     requestRenderData (graphics, cverts) {
         let renderHandle = graphics._renderHandle;
-        let vBytes = (cverts && cverts > 0) ?  cverts : 64;
-        let iBytes = vBytes * 3;
-        let vertices = new Float32Array(vBytes);
-        let indices = new Uint16Array(iBytes);
+        let vCount = (cverts && cverts > 0) ?  cverts : 256;
+        let byteLength = vCount * graphics._vertexFormat._bytes;
+        let iCount = vCount * 3;
+        let vertices = new Float32Array(byteLength);
+        let indices = new Uint16Array(iCount);
         let renderData = new RenderData();
         renderData.index = this._dataOffset;
         renderData.vertexStart = 0;
-        renderData.vertexOffset = vBytes;
+        renderData.vertexOffset = vCount;
         renderData.indiceStart = 0;
-        renderData.indiceOffset = iBytes;
+        renderData.indiceOffset = iCount;
+        renderData.byteOffset = byteLength;
         this._renderDatas.push(renderData);
 
         renderHandle.updateMesh(this._dataOffset, vertices, indices);
@@ -212,18 +215,19 @@ cc.js.mixin(cc.Graphics.Impl.prototype, {
         return this._renderDatas;
     },
 
-    reallocVData (graphics, index, vBytes) {
+    reallocVData (graphics, index, vcount) {
+        let renderData = this._renderDatas[index];
         let renderHandler = graphics._renderHandle;
         let vData = renderHandler.vDatas[index];
-        let renderData = this._renderDatas[index];
+        
         let oldVData;
         if (vData) {
             oldVData = new Uint8Array(vData.buffer);
         }
 
-        renderData.vertexOffset += vBytes;
-
-        let vertices = new Float32Array(vBytes);
+        renderData.vertexOffset += vcount;
+        renderData.byteOffset += vcount * graphics._vertexFormat._bytes;
+        let vertices = new Float32Array(renderData.byteOffset);
         let newData = new Uint8Array(vertices.buffer);
         
         if (oldVData) {
@@ -235,14 +239,15 @@ cc.js.mixin(cc.Graphics.Impl.prototype, {
         return vertices
     },
 
-    reallocIData (graphics, index, iBytes) {
+    reallocIData (graphics, index, icount) {
+        let iBytes = icount;
         let renderHandler = graphics._renderHandle;
         let oldIData = renderHandler.iDatas[index];
         let renderData = this._renderDatas[index];
-
+        
         renderData.indiceOffset += iBytes;
 
-        let indices = new Uint16Array(iBytes);
+        let indices = new Uint16Array(renderData.indiceOffset);
 
         if (oldIData) {
             for (let i = 0, l = oldIData.length; i < l; i++) {

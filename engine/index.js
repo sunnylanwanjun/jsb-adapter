@@ -54,6 +54,7 @@ if (CC_JSB && CC_NATIVERENDERER) {
     require('jsb-adapter/engine/jsb-spine-skeleton.js');
     require('jsb-adapter/engine/jsb-particle.js');
     require('jsb-adapter/engine/scene/graphics-render-handle.js');
+    require('jsb-adapter/engine/scene/mask-render-handle.js');
 
     cc.game.on(cc.game.EVENT_ENGINE_INITED, function () {
         require('jsb-adapter/engine/assemblers/flex-buffer.js');
@@ -66,5 +67,6 @@ if (CC_JSB && CC_NATIVERENDERER) {
         require('jsb-adapter/engine/assemblers/label/bmfont.js');
         require('jsb-adapter/engine/assemblers/graphics/impl.js');
         require('jsb-adapter/engine/assemblers/graphics/index.js');
+        require('jsb-adapter/engine/assemblers/mask-assembler.js');
     });
 }

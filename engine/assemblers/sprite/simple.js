@@ -60,7 +60,6 @@ cc.Sprite._assembler.simple = {
         if (frame && sprite._vertsDirty) {
             this.updateVerts(sprite);
             sprite._vertsDirty = false;
-            sprite._renderHandle.setVertsDirty();
         }
     },
 

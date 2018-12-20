@@ -48,7 +48,7 @@ cc.js.mixin(renderer.MaskRenderHandle.prototype, {
             this.subHandles[name] = null;
         }
     },
-    setMaskType (type) {
+    useImageStencil (type) {
         this.setImageStencil(type);
     }
 });

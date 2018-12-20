@@ -50,7 +50,7 @@ cc.Mask._assembler = {
             else {
                 mask._material = null;
             }
-            mask._renderHandle.setMaskType(true);
+            mask._renderHandle.useImageStencil(true);
         }
         else {
             if (!mask._material) {
@@ -58,7 +58,7 @@ cc.Mask._assembler = {
             }
             mask._graphics._material = mask._material;
             graphicsAssembler.updateRenderData(mask._graphics);
-            mask._renderHandle.setMaskType(false);
+            mask._renderHandle.useImageStencil(false);
         }
         mask._renderHandle.updateMaterial(0, mask._material);
         mask._renderHandle.setMaskInverted(mask.inverted);

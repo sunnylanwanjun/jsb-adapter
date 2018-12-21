@@ -73,7 +73,6 @@ cc.Sprite._assembler.sliced = {
         if (frame && sprite._vertsDirty) {
             this.updateVerts(sprite);
             sprite._vertsDirty = false;
-            sprite._renderHandle.setVertsDirty();
         }
     },
     

@@ -22,42 +22,11 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
-"use strict";
-
-cc.js.mixin(renderer.CustomRenderHandle.prototype, {
-    _ctor () {
-      
-    },
-    bind (component) {
-        if (this._comp !== component && component instanceof cc.RenderComponent) {
-            this._comp = component;
-    
-            if (component._assembler) {
-                this.setUseModel(!!component._assembler.useModel);
-            }
-        }
-    },
-    updateEnabled (enabled) {
-        if (enabled) {
-            if (!this._enabled) {
-                this._enabled = true;
-                this.enable();
-                let node = this._comp.node;
-                if (node) {
-                    node._proxy.addHandle("render", this);
-                }
-            }
-        }
-        else {
-            if (this._enabled) {
-                this._enabled = false;
-                this.disable();
-                let node = this._comp.node;
-                if (node) {
-                    node._proxy.removeHandle("render");
-                }
-            }
-        }
+var nativeCameraProto = renderer.Camera.prototype;
+var _setNode = nativeCameraProto.setNode;
+cc.js.mixin(nativeCameraProto, {
+    setNode (node) {
+        this._persistentNode = node;
+        _setNode.call(this, node);
     }
 });

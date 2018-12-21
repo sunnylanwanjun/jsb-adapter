@@ -67,7 +67,6 @@ cc.Label._assembler.bmfont = cc.js.addon({
     },
 
     _quadsUpdated (comp) {
-        comp._renderHandle.setVertsDirty();
         _dataOffset = 0;
     },
 

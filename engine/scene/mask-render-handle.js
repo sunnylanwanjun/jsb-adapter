@@ -26,26 +26,14 @@
 "use strict";
 
 cc.js.mixin(renderer.MaskRenderHandle.prototype, {
-    _ctor () {
-        this.subHandles = {};
-        this.vDatas = [];
-        this.uintVDatas = [];
-        this.iDatas = [];
-        this.effects = [];
-        this.meshCount = 0;
-        this._material = null;
-        this._delayed = false;
-    },
-    addHandle (name, handle) {
-        if (!this.subHandles[name]) {
-            this.subHandles[name] = handle;
-            this.addSubHandle(name, handle);
+    setNativeRenderHandle (handle) {
+        if(handle) {
+            this.setRenderSubHandle(handle);
         }
     },
-    removeHandle () {
-        if (this.subHandles[name]) {
-            this.removeSubHandle(name, handle);
-            this.subHandles[name] = null;
+    setNativeClearHandle (handle) {
+        if(handle) {
+            this.setClearSubHandle(handle);
         }
     },
     useImageStencil (type) {

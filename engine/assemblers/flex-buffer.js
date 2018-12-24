@@ -46,7 +46,7 @@ cc.js.mixin(cc.FlexBuffer.prototype, {
     // return true if array buffer changed
     reserve (bytes) {
         let byteLength = this.buffer.byteLength;
-        if (bytes > byteLength) {
+        if (bytes > byteLength || (byteLength / bytes > 2)) {
             while (byteLength < bytes) {
                 byteLength *= 2;
             }

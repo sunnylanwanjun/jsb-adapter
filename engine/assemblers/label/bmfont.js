@@ -50,8 +50,9 @@ cc.Label._assembler.bmfont = cc.js.addon({
 
         let buffer = renderHandle.flexBuffer.buffer;
         if (needUpdateArray) {
-            let vertices = new Float32Array(buffer, 0, vBytes/4);
-            let indices = new Uint16Array(buffer, vBytes, iBytes/2);
+            let vertexOffset = buffer.byteLength / bytes * vBytes;
+            let vertices = new Float32Array(buffer, 0, vertexOffset / 4);
+            let indices = new Uint16Array(buffer, vertexOffset);
             for (let i = 0, vid = 0; i < indices.length; i += 6, vid += 4) {
                 indices[i] = vid;
                 indices[i+1] = vid+1;

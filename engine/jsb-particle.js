@@ -60,10 +60,7 @@
             return this._gravity;
         },
         set (val) {
-            if (!val) {
-                this._gravity = val;
-                return
-            }
+            if (!val) return;
             !this._gravity && (this._gravity = cc.v2(0, 0));
 
             this.gravity.x = val.x;
@@ -78,10 +75,7 @@
             return this._sourcePos;
         },
         set (val) {
-            if (!val) {
-                this._sourcePos = val;
-                return
-            }
+            if (!val) return;
             !this._sourcePos && (this._sourcePos = cc.v2(0, 0));
 
             this._sourcePos.x = val.x;
@@ -96,10 +90,7 @@
             return this._posVar;
         },
         set (val) {
-            if (!val) {
-                this._posVar = val;
-                return
-            }
+            if (!val) return;
             !this._posVar && (this._posVar = cc.v2(0, 0));
             
             this._posVar.x = val.x;
@@ -114,10 +105,7 @@
             return this._startColor;
         },
         set (val) {
-            if (!val) {
-                this._startColor = val;
-                return
-            }
+            if (!val) return;
             !this._startColor && (this._startColor = cc.color(255, 255, 255, 255));
 
             this._startColor.r = val.r;
@@ -134,10 +122,7 @@
             return this._startColorVar;
         },
         set (val) {
-            if (!val) {
-                this._startColorVar = val;
-                return
-            }
+            if (!val) return;
             !this._startColorVar && (this._startColorVar = cc.color(0, 0, 0, 0));
 
             this._startColorVar.r = val.r;
@@ -154,10 +139,7 @@
             return this._endColor;
         },
         set (val) {
-            if (!val) {
-                this._endColor = val;
-                return
-            }
+            if (!val) return;
             !this._endColor && (this._endColor = cc.color(255, 255, 255, 0));
 
             this._endColor.r = val.r;
@@ -174,10 +156,7 @@
             return this._endColorVar;
         },
         set (val) {
-            if (!val) {
-                this._endColorVar = val;
-                return
-            }
+            if (!val) return;
             !this._endColorVar && (this._endColorVar = cc.color(0, 0, 0, 0));
 
             this._endColorVar.r = val.r;

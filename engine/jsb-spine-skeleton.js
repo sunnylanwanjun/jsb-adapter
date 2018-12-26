@@ -29,7 +29,10 @@
     if (window.sp === undefined || window.spine === undefined || window.middleware === undefined) return;
     
     var RenderFlow = cc.RenderFlow;
-
+    var _slotColor = cc.color(0, 0, 255, 255);
+    var _boneColor = cc.color(255, 0, 0, 255);
+    var _originColor = cc.color(0, 255, 0, 255);
+    
     sp.ANIMATION_EVENT_TYPE = {
         START: 0,
         INTERRUPT: 1,
@@ -291,6 +294,59 @@
         if (this.__preColor__ === undefined || !node.color.equals(this.__preColor__)) {
             skeleton.setColor(node.color);
             this.__preColor__ = node.color;
+        }
+
+        if (this.debugBones || this.debugSlots) {
+            var debugData = this._debugData || this._skeleton.getDebugData();
+            if (!debugData) return;
+
+            var graphics = this._debugRenderer;
+            graphics.clear();
+    
+            var debugIdx = 0;
+    
+            if (this.debugSlots) {
+                // Debug Slot
+                graphics.strokeColor = _slotColor;
+                graphics.lineWidth = 5;
+    
+                var debugSlotsLen = debugData[debugIdx++];
+                for(var i=0;i<debugSlotsLen;i+=8){
+                    graphics.moveTo(debugData[debugIdx++], debugData[debugIdx++]);
+                    graphics.lineTo(debugData[debugIdx++], debugData[debugIdx++]);
+                    graphics.lineTo(debugData[debugIdx++], debugData[debugIdx++]);
+                    graphics.lineTo(debugData[debugIdx++], debugData[debugIdx++]);
+                    graphics.close();
+                    graphics.stroke();
+                }
+            }
+    
+            if (this.debugBones) {
+    
+                graphics.lineWidth = 5;
+                graphics.strokeColor = _boneColor;
+                graphics.fillColor = _slotColor; // Root bone color is same as slot color.
+    
+                var debugBonesLen = debugData[debugIdx++];
+                for (var i = 0; i < debugBonesLen; i += 4) {
+                    var bx = debugData[debugIdx++];
+                    var by = debugData[debugIdx++];
+                    var x = debugData[debugIdx++];
+                    var y = debugData[debugIdx++];
+    
+                    // Bone lengths.
+                    graphics.moveTo(bx, by);
+                    graphics.lineTo(x, y);
+                    graphics.stroke();
+    
+                    // Bone origins.
+                    graphics.circle(bx, by, Math.PI * 2);
+                    graphics.fill();
+                    if (i === 0) {
+                        graphics.fillColor = _originColor;
+                    }
+                }
+            }
         }
     }
 

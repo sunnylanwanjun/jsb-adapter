@@ -216,11 +216,13 @@
 
         if (!this._texture || !this._texture.loaded) {
             this._simulator.onDisable();
+            this.markForRender(false);
             if (this._renderSpriteFrame) {
                 this._applySpriteFrame();
             }
         }
         else {
+            this.markForRender(true);
             this._simulator.onEnable();
             this._material.texture = this._texture;
             this._updateMaterial(this._material);

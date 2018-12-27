@@ -28,6 +28,9 @@
     
     var renderEngine = cc.renderer.renderEngine;
     var SpriteMaterial = renderEngine.SpriteMaterial;
+    var _slotColor = cc.color(0, 0, 255, 255);
+    var _boneColor = cc.color(255, 0, 0, 255);
+    var _originColor = cc.color(0, 255, 0, 255);
 
     ////////////////////////////////////////////////////////////
     // override dragonBones library by native dragonBones
@@ -419,7 +422,8 @@
             return;
         }
 
-        this._nativeDisplay = this._factory.buildArmatureDisplay(this.armatureName, this.dragonAsset._dragonBonesData.name);
+        var atlasName = this.dragonAtlasAsset._textureAtlasData.name;
+        this._nativeDisplay = this._factory.buildArmatureDisplay(this.armatureName, this.dragonAsset._dragonBonesData.name, "", atlasName);
         if (!this._nativeDisplay) {
             this._clearRenderData();
             return;
@@ -436,6 +440,46 @@
 
         if (this.animationName) {
             this.playAnimation(this.animationName, this.playTimes);
+        }
+    }
+
+    armatureDisplayProto.update = function() {
+        if (this._debugDraw && this.debugBones) {
+
+            var nativeDisplay = this._nativeDisplay;
+            this._debugData = this._debugData || nativeDisplay.getDebugData();
+            if (!this._debugData) return;
+
+            var graphics = this._debugDraw;
+            graphics.clear();
+
+            var debugData = this._debugData;
+            var debugIdx = 0;
+
+            graphics.lineWidth = 5;
+            graphics.strokeColor = _boneColor;
+            graphics.fillColor = _slotColor; // Root bone color is same as slot color.
+
+            var debugBonesLen = debugData[debugIdx++];
+            for (var i = 0; i < debugBonesLen; i += 4) {
+                var bx = debugData[debugIdx++];
+                var by = debugData[debugIdx++];
+                var x = debugData[debugIdx++];
+                var y = debugData[debugIdx++];
+
+                // Bone lengths.
+                graphics.moveTo(bx, by);
+                graphics.lineTo(x, y);
+                graphics.stroke();
+
+                // Bone origins.
+                graphics.circle(bx, by, Math.PI * 2);
+                graphics.fill();
+                if (i === 0) {
+                    graphics.fillColor = _originColor;
+                }
+            }
+            
         }
     }
 

@@ -199,8 +199,8 @@
     };
 
     PSProto._onTextureLoaded = function () {
-        this._texture = this._spriteFrame.getTexture();
-        this._simulator.updateUVs(this._spriteFrame.uv);
+        this._texture = this._renderSpriteFrame.getTexture();
+        this._simulator.updateUVs(this._renderSpriteFrame.uv);
         // Reactivate material
         this._activateMaterial();
     },
@@ -216,7 +216,7 @@
 
         if (!this._texture || !this._texture.loaded) {
             this._simulator.onDisable();
-            if (this._spriteFrame) {
+            if (this._renderSpriteFrame) {
                 this._applySpriteFrame();
             }
         }

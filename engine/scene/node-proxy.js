@@ -74,4 +74,8 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
     updateGroupIndex () {
         this.setGroupID(this._owner.groupIndex);
     },
+
+    updateOpacity () {
+        this.setOpacity(this._owner.opacity);
+    },
 });

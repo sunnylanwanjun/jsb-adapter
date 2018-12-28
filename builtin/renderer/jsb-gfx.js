@@ -104,8 +104,7 @@ function convertOptions(options) {
         options.glFormat = image._glFormat;
         options.glType = image._glType;
         options.bpp = image._bpp;
-        options.compressed = image._compressed
-        options.premultiplyAlpha = image._premultiplyAlpha;
+        options.compressed = image._compressed;
     }
     else if (options.images && options.images[0] instanceof HTMLCanvasElement) {
         options.glInternalFormat = gl.RGBA;

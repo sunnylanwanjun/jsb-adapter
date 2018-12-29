@@ -25,11 +25,13 @@
 'use strict';
 
 let RenderFlow = cc.RenderFlow;
-LOCAL_TRANSFORM = RenderFlow.FLAG_LOCAL_TRANSFORM;
-COLOR = RenderFlow.FLAG_COLOR;
-OPACITY = RenderFlow.FLAG_OPACITY;
-UPDATE_RENDER_DATA = RenderFlow.FLAG_UPDATE_RENDER_DATA;
-CUSTOM_IA_RENDER = RenderFlow.FLAG_CUSTOM_IA_RENDER;
+const LOCAL_TRANSFORM = RenderFlow.FLAG_LOCAL_TRANSFORM;
+const COLOR = RenderFlow.FLAG_COLOR;
+const OPACITY = RenderFlow.FLAG_OPACITY;
+const UPDATE_RENDER_DATA = RenderFlow.FLAG_UPDATE_RENDER_DATA;
+const CUSTOM_IA_RENDER = RenderFlow.FLAG_CUSTOM_IA_RENDER;
+
+const POSITION_ON = 1 << 0;
 
 cc.js.getset(cc.Node.prototype, "_renderFlag", function () {
     return 0;
@@ -56,3 +58,17 @@ cc.js.getset(cc.Node.prototype, "_renderFlag", function () {
         }
     }
 });
+
+cc.PrivateNode.prototype._posDirty = function (sendEvent) {
+    let parent = this.parent;
+    if (parent) {
+        // Position correction for transform calculation
+        this._trs[1] = this._originPos.x - (parent._anchorPoint.x - 0.5) * parent._contentSize.width;
+        this._trs[2] = this._originPos.y - (parent._anchorPoint.y - 0.5) * parent._contentSize.height;
+    }
+
+    this.setLocalDirty(cc.Node._LocalDirtyFlag.POSITION);
+    if (sendEvent === true && (this._eventMask & POSITION_ON)) {
+        this.emit(cc.Node.EventType.POSITION_CHANGED);
+    }
+}

@@ -23,18 +23,10 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-if (CC_RUNTIME) {
-    require('jsb-adapter/engine/rt-sys.js');
-    require('jsb-adapter/engine/rt_input.js');
-    require('jsb-adapter/engine/rt-loadSubpackage.js');
-    require('jsb-adapter/engine/rt-game.js');
-    require('jsb-adapter/engine/rt-jsb.js');
-} else {
-    require('jsb-adapter/engine/jsb-sys.js');
-    require('jsb-adapter/engine/jsb-game.js');
-    require('jsb-adapter/engine/jsb-videoplayer.js');
-    require('jsb-adapter/engine/jsb-webview.js');
-}
+require('./jsb-sys.js');
+require('./jsb-game.js');
+require('./jsb-videoplayer.js');
+require('./jsb-webview.js');
 require('./jsb-audio.js');
 require('./jsb-loader.js');
 require('./jsb-editbox.js');

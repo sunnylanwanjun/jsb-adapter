@@ -23,15 +23,15 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-require('./jsb-sys.js');
-require('./jsb-game.js');
-require('./jsb-videoplayer.js');
-require('./jsb-webview.js');
-require('./jsb-audio.js');
-require('./jsb-loader.js');
-require('./jsb-editbox.js');
-require('./jsb-reflection.js');
-require('./jsb-assets-manager.js');
+require('jsb-adapter/engine/jsb-sys.js');
+require('jsb-adapter/engine/jsb-game.js');
+require('jsb-adapter/engine/jsb-videoplayer.js');
+require('jsb-adapter/engine/jsb-webview.js');
+require('jsb-adapter/engine/jsb-audio.js');
+require('jsb-adapter/engine/jsb-loader.js');
+require('jsb-adapter/engine/jsb-editbox.js');
+require('jsb-adapter/engine/jsb-reflection.js');
+require('jsb-adapter/engine/jsb-assets-manager.js');
 
 if (CC_JSB && CC_NATIVERENDERER) {
     require('jsb-adapter/engine/scene/camera.js')

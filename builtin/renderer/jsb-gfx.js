@@ -24,7 +24,6 @@
  
 import { enums, glTextureFmt } from "./enums";
 import VertexFormat from "./jsb-vertex-format";
-const gl = window.__gl;
 const gfx = window.gfx;
 
 var _tmpGetSetDesc = {
@@ -34,21 +33,24 @@ var _tmpGetSetDesc = {
     configurable: true
 };
 
-window.device = gfx.Device.getInstance();
-window.device._gl = window.__gl;
+gfx.Device.prototype.setBlendColor32 = gfx.Device.prototype.setBlendColor;
+gfx.Device._getInstance = gfx.Device.getInstance;
+gfx.Device.getInstance = function () {
+    var device = gfx.Device._getInstance();
+    device._gl = window.__gl;
+    return device;
+}
 
 //FIXME:
-window.device._stats = { vb: 0 };
-window.device._caps = {
-    maxVextexTextures: 16,
-    maxFragUniforms: 1024,
-    maxTextureUints: 8,
-    maxVertexAttributes: 16,
-    maxDrawBuffers: 8,
-    maxColorAttatchments: 8
-};
-
-device.setBlendColor32 = device.setBlendColor;
+// window.device._stats = { vb: 0 };
+// window.device._caps = {
+//     maxVextexTextures: 16,
+//     maxFragUniforms: 1024,
+//     maxTextureUints: 8,
+//     maxVertexAttributes: 16,
+//     maxDrawBuffers: 8,
+//     maxColorAttatchments: 8
+// };
 
 var _p = gfx.Program.prototype;
 _p._ctor = function(device, options) {
@@ -97,7 +99,8 @@ function convertImages(images) {
     }
 }
 
-function convertOptions(options) {    
+function convertOptions(options) {
+    let gl = window.__gl;
     if (options.images && options.images[0] instanceof HTMLImageElement) {
         var image = options.images[0];
         options.glInternalFormat = image._glInternalFormat;

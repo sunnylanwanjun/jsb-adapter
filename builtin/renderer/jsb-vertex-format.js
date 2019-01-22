@@ -83,4 +83,16 @@ export default class VertexFormat {
   element(attrName) {
     return this._attr2el[attrName];
   }
+
+  getElement (attrName) {
+    return this._attr2el[attrName];
+  }
+
+  getBytes () {
+    return this._bytes;
+  }
+
+  getAttributeNames () {
+    return Object.keys(this._attr2el);
+  }
 }

@@ -53,6 +53,7 @@ export default class Effect {
     this._techniques.length = 0;
     this._properties = null;
     this._defines.length = 0;
+    this._nativeObj.clear();
   }
 
   getTechnique(stage) {
@@ -94,7 +95,7 @@ export default class Effect {
       let def = this._defines[i];
       if ( def.name === name ) {
         def.value = value;
-        this._nativeObj.setDefineValue(name, value);
+        this._nativeObj.define(name, value);
         return;
       }
     }
@@ -102,16 +103,20 @@ export default class Effect {
     console.warn(`Failed to set define ${name}, define not found.`);
   }
 
-  extractDefines(out = {}) {
-    for (let i = 0; i < this._defines.length; ++i) {
-      let def = this._defines[i];
-      out[def.name] = def.value;
-    }
+  // extractDefines(out = {}) {
+  //   for (let i = 0; i < this._defines.length; ++i) {
+  //     let def = this._defines[i];
+  //     out[def.name] = def.value;
+  //   }
 
-    return out;
-  }
+  //   return out;
+  // }
 
   updateHash (hash) {
     this._nativeObj.updateHash(hash);
+  }
+
+  getHash () {
+    this._nativeObj.getHash();
   }
 }

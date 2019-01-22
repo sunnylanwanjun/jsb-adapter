@@ -96,6 +96,11 @@ export default class Pass {
     this._native.init(this._programName, binary);
   }
 
+  setProgramName (name) {
+    this._programName = name;
+    this._native.setProgramName(this._programName);
+  }
+
   copy(pass) {
     this._programName = pass._programName;
     // cullmode
@@ -136,12 +141,6 @@ export default class Pass {
     this._cullMode = cullMode;
 
     this._native.setCullMode(cullMode);
-  }
-
-  disableStecilTest() {
-    this._stencilTest = false;
-
-    this._native.disableStecilTest();
   }
 
   setBlend(
@@ -235,5 +234,11 @@ export default class Pass {
                                 stencilZFailOp,
                                 stencilZPassOp,
                                 stencilWriteMask);
+  }
+
+  disableStencilTest() {
+    this._stencilTest = false;
+
+    this._native.disableStencilTest();
   }
 }

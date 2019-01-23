@@ -54,12 +54,16 @@ gfx.Device.getInstance = function () {
 
 var _p = gfx.Program.prototype;
 _p._ctor = function(device, options) {
-    this.init(device, options.vert, options.frag);
+    if (device) {
+        this.init(device, options.vert, options.frag);
+    }
 };
 
 _p = gfx.VertexBuffer.prototype;
 _p._ctor = function(device, format, usage, data, numVertices) {
-    this.init(device, format._nativeObj, usage, data, numVertices);
+    if (device && format) {
+        this.init(device, format._nativeObj, usage, data, numVertices);
+    }
     this._nativePtr = this.self();
 };
 _tmpGetSetDesc.get = _p.getCount;
@@ -68,7 +72,9 @@ Object.defineProperty(_p, "count", _tmpGetSetDesc);
 
 _p = gfx.IndexBuffer.prototype;
 _p._ctor = function(device, format, usage, data, numIndices) {
-    this.init(device, format, usage, data, numIndices);
+    if (device) {
+        this.init(device, format, usage, data, numIndices);
+    }
     this._nativePtr = this.self();
 };
 _tmpGetSetDesc.get = _p.getCount;
@@ -131,8 +137,10 @@ function convertOptions(options) {
 
 _p = gfx.Texture2D.prototype;
 _p._ctor = function(device, options) {
-    convertOptions(options);
-    this.init(device, options);
+    if (device) {
+        convertOptions(options);
+        this.init(device, options);
+    }
 };
 _p.destroy = function() { 
 };
@@ -167,7 +175,9 @@ Object.defineProperty(_p, "_height", _tmpGetSetDesc);
 
 _p = gfx.FrameBuffer.prototype;
 _p._ctor = function(device, width, height, options) {
-    this.init(device, width, height, options);
+    if (device) {
+        this.init(device, width, height, options);
+    }
 };
 
 var TextHAlignment = {

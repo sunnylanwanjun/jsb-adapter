@@ -119,7 +119,9 @@ var fillModelData = function() {
 // ForwardRenderer adapter
 var _p = renderer.ForwardRenderer.prototype;
 _p._ctor = function(device, builtin) {
-  this.init(device, builtin.programTemplates, builtin.defaultTexture, window.innerWidth, window.innerHeight);
+  if (device) {
+    this.init(device, builtin.programTemplates, builtin.defaultTexture, window.innerWidth, window.innerHeight);
+  }
 };
 _p.render = function(scene) {
   fillModelData();

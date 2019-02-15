@@ -23,12 +23,6 @@
 "use strict";
 
 cc.js.mixin(renderer.MaskRenderHandle.prototype, {
-    _ctor () {
-        this._comp = null;
-    },
-    destroy () {
-        this._comp = null;
-    },
     setNativeRenderHandle (handle) {
         if(handle) {
             this.setRenderSubHandle(handle);

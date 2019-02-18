@@ -35,20 +35,20 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
         {
             owner._proxy = this;
             this.updateZOrder();
-            this.updateGroupIndex();
+            this.updateCullingMask();
             this.updateJSTRS(owner._trs);
             if (owner._parent && owner._parent._proxy) {
                 this.updateParent(owner._parent._proxy);
             }
 
             owner.on(cc.Node.EventType.SIBLING_ORDER_CHANGED, this.updateZOrder, this);
-            owner.on(cc.Node.EventType.GROUP_CHANGED, this.updateGroupIndex, this);
+            owner.on(cc.Node.EventType.GROUP_CHANGED, this.updateCullingMask, this);
         }
     },
 
     unbind () {
         this._owner.off(cc.Node.EventType.SIBLING_ORDER_CHANGED, this.updateZOrder, this);
-        this._owner.off(cc.Node.EventType.GROUP_CHANGED, this.updateGroupIndex, this);
+        this._owner.off(cc.Node.EventType.GROUP_CHANGED, this.updateCullingMask, this);
         this._owner._proxy = null;
         this._owner = null;
         this.reset();
@@ -68,8 +68,8 @@ cc.js.mixin(renderer.NodeProxy.prototype, {
         this.setLocalZOrder(this._owner._localZOrder);
     },
 
-    updateGroupIndex () {
-        this.setGroupID(this._owner.groupIndex);
+    updateCullingMask () {
+        this.setCullingMask(this._owner._cullingMask);
     },
 
     updateOpacity () {

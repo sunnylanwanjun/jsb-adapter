@@ -261,6 +261,13 @@
             return;
         }
 
+        var texValues = skeletonData.textures;
+        var texKeys = skeletonData.textureNames;
+        if (!(texValues && texValues.length > 0 && texKeys && texKeys.length > 0)) {
+            cc.errorID(7507, skeletonData.name);
+            return;
+        }
+
         let skeletonAni = new spine.SpineAnimation();
         try {
             spine.initSkeletonRenderer(skeletonAni, uuid);
@@ -277,6 +284,7 @@
         this._skeleton.setTimeScale(this.timeScale);
         this._skeleton.bindNodeProxy(this.node._proxy);
 
+        this._material.texture = texValues[0];
         this._material.useModel = true;
         this._updateMaterial(this._material);
 

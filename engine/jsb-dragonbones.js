@@ -445,6 +445,8 @@
         this._nativeDisplay.setOpacityModifyRGB(this.premultipliedAlpha);
         this._nativeDisplay.setDebugBonesEnabled(this.debugBones);
         
+        this._material.texture = this.dragonAtlasAsset._texture;
+        this._material.useColor = false;
         this._material.useModel = true;
         this._updateMaterial(this._material);
 

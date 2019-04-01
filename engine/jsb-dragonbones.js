@@ -405,14 +405,14 @@
     });
 
     armatureDisplayProto._clearRenderData = function () {
-        this._nativeDisplay = undefined;
+        this._nativeDisplay = null;
     };
 
     // Shield use batch in native
     armatureDisplayProto._updateBatch = function () {}
 
     armatureDisplayProto.initNativeHandle = function () {
-        this._assembler = undefined;
+        this._assembler = null;
         this._renderHandle = new middleware.MiddlewareRenderHandle();
         this._renderHandle.bind(this);
     };
@@ -506,8 +506,8 @@
         _onDestroy.call(this);
         if (this._nativeDisplay) {
             this._nativeDisplay.dispose();
-            this._nativeDisplay._comp = undefined;
-            this._nativeDisplay = undefined;
+            this._nativeDisplay._comp = null;
+            this._nativeDisplay = null;
         }
     };
     

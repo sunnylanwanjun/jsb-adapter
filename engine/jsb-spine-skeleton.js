@@ -239,7 +239,7 @@
     skeleton._updateBatch = function () {};
 
     skeleton.initNativeHandle = function () {
-        this._assembler = undefined;
+        this._assembler = null;
         this._renderHandle = new middleware.MiddlewareRenderHandle();
         this._renderHandle.bind(this);
     };
@@ -584,10 +584,9 @@
         _onDestroy.call(this);
         if (this._skeleton) {
             this._skeleton.stopSchedule();
-            this._skeleton._comp = undefined;
-            this._skeleton = undefined;
+            this._skeleton._comp = null;
+            this._skeleton = null;
         }
-        this._materialCache = undefined;
     };
 
 })();

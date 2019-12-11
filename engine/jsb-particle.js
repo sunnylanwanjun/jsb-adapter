@@ -54,7 +54,7 @@
     };
 
     // value type properties
-    let propertiesList = ["positionType", "emissionRate", "totalParticles", "duration", "emitterMode", "life", "lifeVar", "startSize", "startSizeVar", "endSize", "endSizeVar", "startSpin", "startSpinVar", "endSpin", "endSpinVar", "angle", "angleVar", "speed", "speedVar", "radialAccel", "radialAccelVar", "tangentialAccel", "tangentialAccelVar", "rotationIsDir", "startRadius", "startRadiusVar", "endRadius", "endRadiusVar", "rotatePerS", "rotatePerSVar"];
+    let propertiesList = ["positionType", "emissionRate", "totalParticles", "duration", "emitterMode", "life", "lifeVar", "startSize", "startSizeVar", "endSize", "endSizeVar", "startSpin", "startSpinVar", "endSpin", "endSpinVar", "angle", "angleVar", "speed", "speedVar", "radialAccel", "radialAccelVar", "tangentialAccel", "tangentialAccelVar", "rotationIsDir", "startRadius", "startRadiusVar", "endRadius", "endRadiusVar", "rotatePerS", "rotatePerSVar", "aspectRatio"];
 
     propertiesList.forEach( function(getSetName) {
         let varName = "_" + getSetName;
@@ -248,8 +248,15 @@
     };
 
     PSProto._onTextureLoaded = function () {
-        this._texture = this._renderSpriteFrame.getTexture();
-        this._simulator.updateUVs(this._renderSpriteFrame.uv);
+        // set native uv
+        let spriteFrame = this._renderSpriteFrame;
+        this._texture = spriteFrame.getTexture();
+        this._simulator.updateUVs(spriteFrame.uv);
+
+        // set aspect ratio
+        let frameRect = spriteFrame._rect;
+        this.aspectRatio = frameRect.width / frameRect.height;
+
         // Reactivate material
         this._activateMaterial();
     };
